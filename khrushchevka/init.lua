@@ -100,3 +100,121 @@ core.register_craft({output = modname .. ":balcony_slab 4",
 core.register_craft({output = modname .. ":balcony_rail 6",
 	recipe = {{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
 	          {"default:steel_ingot", "", "default:steel_ingot"}}})
+
+----------------------------------------------------------------------
+-- Подъезд и двор
+----------------------------------------------------------------------
+
+-- Подъездная дверь (двустворчатая логика как у стандартных дверей)
+doors.register("door_entrance", {
+	tiles = {{name = "khrushchevka_door.png", backface_culling = true}},
+	description = "Entrance Door",
+	inventory_image = "khrushchevka_door_item.png",
+	groups = {node = 1, cracky = 2, door = 1},
+	sounds = default.node_sound_metal_defaults(),
+	sound_open = "doors_steel_door_open",
+	sound_close = "doors_steel_door_close",
+	recipe = {
+		{"default:steel_ingot", "default:steel_ingot"},
+		{"default:steel_ingot", "default:steel_ingot"},
+		{"default:steel_ingot", "default:steel_ingot"},
+	},
+})
+
+-- Плитка на полу лестничной клетки
+reg("stair_tile", {description = "Stairwell Floor Tile", tiles = {"khrushchevka_stair_tile.png"}})
+core.register_craft({output = modname .. ":stair_tile 4",
+	recipe = {{"default:clay_lump", "default:gravel"}, {"default:gravel", "default:clay_lump"}}})
+
+-- Лестничные перила (тонкий забор вдоль блока)
+reg("stair_rail", {
+	description = "Stairwell Railing",
+	drawtype = "nodebox",
+	tiles = {"khrushchevka_rail_dark.png"},
+	paramtype = "light",
+	paramtype2 = "facedir",
+	sunlight_propagates = true,
+	node_box = {type = "fixed", fixed = {
+		{-0.5, 0.35, -0.05, 0.5, 0.5, 0.05},
+		{-0.5, -0.5, -0.03, -0.44, 0.5, 0.03},
+		{0.44, -0.5, -0.03, 0.5, 0.5, 0.03},
+	}},
+	groups = {cracky = 3},
+	sounds = default.node_sound_metal_defaults(),
+})
+core.register_craft({output = modname .. ":stair_rail 4",
+	recipe = {{"default:steel_ingot", "default:steel_ingot"}, {"group:stick", "group:stick"}}})
+
+-- Батарея отопления (крепится к стене)
+reg("radiator", {
+	description = "Radiator",
+	drawtype = "nodebox",
+	tiles = {"khrushchevka_radiator.png"},
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,
+	walkable = false,
+	node_box = {type = "wallmounted",
+		wall_top = {-0.4, 0.4, -0.2, 0.4, 0.5, 0.2},
+		wall_bottom = {-0.4, -0.5, -0.2, 0.4, -0.4, 0.2},
+		wall_side = {-0.5, -0.3, -0.4, -0.4, 0.3, 0.4},
+	},
+	selection_box = {type = "wallmounted",
+		wall_top = {-0.4, 0.4, -0.2, 0.4, 0.5, 0.2},
+		wall_bottom = {-0.4, -0.5, -0.2, 0.4, -0.4, 0.2},
+		wall_side = {-0.5, -0.3, -0.4, -0.4, 0.3, 0.4},
+	},
+	groups = {cracky = 3, attached_node = 1},
+	sounds = default.node_sound_metal_defaults(),
+})
+core.register_craft({output = modname .. ":radiator 2",
+	recipe = {{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+	          {"default:steel_ingot", "default:copper_ingot", "default:steel_ingot"}}})
+
+-- Ковёр на стене
+reg("wall_carpet", {
+	description = "Wall Carpet",
+	drawtype = "signlike",
+	tiles = {"khrushchevka_carpet.png"},
+	inventory_image = "khrushchevka_carpet.png",
+	wield_image = "khrushchevka_carpet.png",
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,
+	walkable = false,
+	selection_box = {type = "wallmounted"},
+	groups = {choppy = 3, oddly_breakable_by_hand = 2, attached_node = 1},
+	sounds = default.node_sound_wood_defaults(),
+})
+core.register_craft({output = modname .. ":wall_carpet 2",
+	recipe = {{"wool:red", "wool:red"}, {"wool:red", "wool:yellow"}}})
+
+-- Лавочка во дворе
+reg("bench", {
+	description = "Yard Bench",
+	drawtype = "nodebox",
+	tiles = {"default_wood.png"},
+	paramtype = "light",
+	paramtype2 = "facedir",
+	node_box = {type = "fixed", fixed = {
+		{-0.5, -0.1, -0.2, 0.5, 0.0, 0.2},    -- сиденье
+		{-0.5, 0.0, 0.15, 0.5, 0.45, 0.2},    -- спинка
+		{-0.45, -0.5, -0.15, -0.35, -0.1, 0.15},
+		{0.35, -0.5, -0.15, 0.45, -0.1, 0.15},
+	}},
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
+	sounds = default.node_sound_wood_defaults(),
+})
+core.register_craft({output = modname .. ":bench 2",
+	recipe = {{"", "", ""}, {"group:wood", "group:wood", "group:wood"},
+	          {"group:stick", "", "group:stick"}}})
+
+-- Гараж-ракушка: металлическая стена и ворота
+reg("garage_wall", {description = "Garage Metal Wall", tiles = {"khrushchevka_garage.png"},
+	sounds = default.node_sound_metal_defaults()})
+reg("garage_gate", {description = "Garage Gate", tiles = {"khrushchevka_garage_gate.png"},
+	sounds = default.node_sound_metal_defaults()})
+core.register_craft({output = modname .. ":garage_wall 4",
+	recipe = {{"default:steel_ingot", "default:steel_ingot"}, {"default:steel_ingot", "default:steel_ingot"}}})
+core.register_craft({output = modname .. ":garage_gate 2",
+	type = "shapeless", recipe = {modname .. ":garage_wall", modname .. ":garage_wall", "dye:green"}})
