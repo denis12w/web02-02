@@ -9,7 +9,9 @@ end
 
 -- Панели
 reg("panel", {description = "Panel Wall", tiles = {"khrushchevka_panel.png"}})
-reg("panel_seam", {description = "Panel Wall (seams)", tiles = {"khrushchevka_panel_seam.png"}})
+reg("panel_seam", {description = "Panel Wall (corner seam)", tiles = {"khrushchevka_panel_seam.png"}})
+reg("panel_seam_h", {description = "Panel Wall (horizontal seam)", tiles = {"khrushchevka_panel_seam_h.png"}})
+reg("panel_seam_v", {description = "Panel Wall (vertical seam)", tiles = {"khrushchevka_panel_seam_v.png"}})
 reg("panel_beige", {description = "Beige Panel Wall", tiles = {"khrushchevka_panel_beige.png"}})
 reg("panel_blue", {description = "Blue Panel Wall", tiles = {"khrushchevka_panel_blue.png"}})
 
@@ -32,8 +34,8 @@ reg("wallpaper", {
 -- Окно: стекло в раме (прозрачное)
 reg("window", {
 	description = "Window",
-	drawtype = "glasslike_framed",
-	tiles = {"khrushchevka_window_frame.png", "khrushchevka_window_glass.png"},
+	drawtype = "glasslike",
+	tiles = {"khrushchevka_window.png"},
 	paramtype = "light",
 	sunlight_propagates = true,
 	use_texture_alpha = "blend",
@@ -45,7 +47,7 @@ reg("window", {
 reg("balcony_slab", {
 	description = "Balcony Slab",
 	drawtype = "nodebox",
-	tiles = {"khrushchevka_panel.png"},
+	tiles = {"khrushchevka_concrete.png", "khrushchevka_concrete_under.png", "khrushchevka_concrete.png"},
 	paramtype = "light",
 	node_box = {type = "fixed", fixed = {-0.5, -0.5, -0.5, 0.5, -0.3, 0.5}},
 })
@@ -54,12 +56,43 @@ reg("balcony_slab", {
 reg("balcony_rail", {
 	description = "Balcony Railing",
 	drawtype = "nodebox",
-	tiles = {"khrushchevka_rail.png"},
+	tiles = {"khrushchevka_rail_top.png", "khrushchevka_rail_top.png", "khrushchevka_rail.png"},
 	paramtype = "light",
 	paramtype2 = "facedir",
 	sunlight_propagates = true,
 	node_box = {type = "fixed", fixed = {
 		{-0.5, -0.5, -0.5, 0.5, 0.5, -0.4},
+	}},
+	groups = {cracky = 3},
+	sounds = default.node_sound_metal_defaults(),
+})
+
+-- Балконное ограждение из прутьев (сквозное)
+reg("balcony_rail_bars", {
+	description = "Balcony Railing (bars)",
+	drawtype = "nodebox",
+	tiles = {"khrushchevka_rail_top.png", "khrushchevka_rail_top.png", "khrushchevka_rail_bars.png"},
+	use_texture_alpha = "clip",
+	paramtype = "light",
+	paramtype2 = "facedir",
+	sunlight_propagates = true,
+	node_box = {type = "fixed", fixed = {
+		{-0.5, -0.5, -0.5, 0.5, 0.5, -0.45},
+	}},
+	groups = {cracky = 3},
+	sounds = default.node_sound_metal_defaults(),
+})
+
+-- Водосточная труба
+reg("drainpipe", {
+	description = "Drainpipe",
+	drawtype = "nodebox",
+	tiles = {"khrushchevka_drainpipe.png"},
+	paramtype = "light",
+	paramtype2 = "facedir",
+	sunlight_propagates = true,
+	node_box = {type = "fixed", fixed = {
+		{-0.12, -0.5, 0.26, 0.12, 0.5, 0.5},
 	}},
 	groups = {cracky = 3},
 	sounds = default.node_sound_metal_defaults(),
@@ -79,6 +112,12 @@ core.register_craft({output = modname .. ":panel 4",
 	recipe = {{stone, stone}, {stone, stone}}})
 core.register_craft({output = modname .. ":panel_seam 2",
 	recipe = {{modname .. ":panel"}, {modname .. ":panel"}}})
+core.register_craft({output = modname .. ":panel_seam_h 2",
+	recipe = {{modname .. ":panel", modname .. ":panel"}}})
+core.register_craft({output = modname .. ":panel_seam_v",
+	type = "shapeless", recipe = {modname .. ":panel_seam_h"}})
+core.register_craft({output = modname .. ":panel_seam_h",
+	type = "shapeless", recipe = {modname .. ":panel_seam_v"}})
 core.register_craft({output = modname .. ":panel_beige",
 	type = "shapeless", recipe = {modname .. ":panel", "dye:yellow"}})
 core.register_craft({output = modname .. ":panel_blue",
@@ -96,7 +135,12 @@ core.register_craft({output = modname .. ":wallpaper 4",
 core.register_craft({output = modname .. ":window 2",
 	recipe = {{"default:steel_ingot", "default:glass"}, {"default:glass", "default:steel_ingot"}}})
 core.register_craft({output = modname .. ":balcony_slab 4",
-	recipe = {{modname .. ":panel", modname .. ":panel"}}})
+	recipe = {{modname .. ":panel", modname .. ":panel", modname .. ":panel"}}})
+core.register_craft({output = modname .. ":balcony_rail_bars 6",
+	recipe = {{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+	          {"group:stick", "", "group:stick"}}})
+core.register_craft({output = modname .. ":drainpipe 6",
+	recipe = {{"default:steel_ingot"}, {"default:steel_ingot"}, {"dye:brown"}}})
 core.register_craft({output = modname .. ":balcony_rail 6",
 	recipe = {{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
 	          {"default:steel_ingot", "", "default:steel_ingot"}}})
